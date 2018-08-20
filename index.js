@@ -79,7 +79,8 @@ var serverLogic = function (req, res) {
 
     // route the request to the specified handler
     // value of the handler variable is a function that takes a data object and a callback
-    // we're actually invoking the handler here and passing in our data, status code and callback
+    // we're actually invoking the handler here and passing in our data - we're receiving a statusCode and payload from
+    // the actual operation taking place (being passed through our callback) returns two callback params (status and payload)
     handler(dataObj, function (statusCode, payload) {
       // we can't know the statusCode ahead of time so set a default
       statusCode = typeof (statusCode) === 'number' ? statusCode : 200
