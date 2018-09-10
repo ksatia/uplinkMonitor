@@ -11,6 +11,7 @@ var config = require('./config')
 var fs = require('fs')
 var _data = require('./lib/data')
 var handlers = require('./lib/handlers')
+var helpers = require('./lib/helpers')
 
 // this server would respond to any kind of request from a client
 const httpServer = http.createServer(function (req, res) {
@@ -20,6 +21,7 @@ const httpServer = http.createServer(function (req, res) {
 // listen using the configuration port passed from the command line
 httpServer.listen(config.httpPort || 5000, function () {
   console.log('HTTP server connected successfully at port ' + config.httpPort + ' using the ' + config.envName + ' environment')
+  console.log(config.hashingSecret)
 })
 
 // we need to create keys that are required for starting an HTTPS server
@@ -74,7 +76,7 @@ var serverLogic = function (req, res) {
       'query': queryString,
       'method': method,
       'header': header,
-      'payload': streamBuffer
+      'payload': helpers.parseJsonToObject(streamBuffer)
     }
 
     // route the request to the specified handler
@@ -105,3 +107,7 @@ const router = {
   'ping': handlers.ping,
   'users': handlers.users
 }
+
+
+// the router is just a layer of abstraction over our handler and tells our "handler variable" 
+// which function to point to

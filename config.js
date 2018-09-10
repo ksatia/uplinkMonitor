@@ -7,18 +7,20 @@
 var environments = {}
 
 environments.staging = {
-  'httpPort': 8000,
-  'httpsPort': 8001,
-  'envName': 'staging',
-  'hashKey': 'thisIsASecretKey'
-}
+  'httpPort' : 3000,
+  'httpsPort' : 3001,
+  'envName' : 'staging',
+  'hashingSecret' : 'thisIsASecret'
+};
+
+environments.staging.hashingSecret = 'thisIsASecret'
 
 environments.production = {
-  'httpPort': 3000,
-  'httpsPort': 3001,
-  'envName': 'production',
-  'hashKey': 'thisIsAlsoASecretKey'
-}
+  'httpPort' : 5000,
+  'httpsPort' : 5001,
+  'envName' : 'production',
+  'hashingSecret' : 'thisIsAlsoASecret'
+};
 
 var passedEnvironment = typeof (process.env.NODE_ENV) === 'string' ? process.env.NODE_ENV.toLowerCase() : ''
 // check that passed in NODE_ENV value exists in our config container object
