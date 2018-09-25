@@ -7,7 +7,7 @@ const http = require('http')
 const https = require('https')
 const url = require('url')
 const StringDecoder = require('string_decoder').StringDecoder
-var config = require('./config')
+const config = require('./lib/config')
 var fs = require('fs')
 var _data = require('./lib/data')
 var handlers = require('./lib/handlers')
@@ -21,7 +21,6 @@ const httpServer = http.createServer(function (req, res) {
 // listen using the configuration port passed from the command line
 httpServer.listen(config.httpPort || 5000, function () {
   console.log('HTTP server connected successfully at port ' + config.httpPort + ' using the ' + config.envName + ' environment')
-  console.log(config.hashingSecret)
 })
 
 // we need to create keys that are required for starting an HTTPS server
@@ -71,7 +70,7 @@ var serverLogic = function (req, res) {
     var handler = router.hasOwnProperty(trimmedPathName) ? router[trimmedPathName] : handlers.notFound
 
     // construct object to pass as 'data' parameter for callback
-    var dataObj = {
+    var data = {
       'trimmedPath': trimmedPathName,
       'query': queryString,
       'method': method,
@@ -83,7 +82,7 @@ var serverLogic = function (req, res) {
     // value of the handler variable is a function that takes a data object and a callback
     // we're actually invoking the handler here and passing in our data - we're receiving a statusCode and payload from
     // the actual operation taking place (being passed through our callback) returns two callback params (status and payload)
-    handler(dataObj, function (statusCode, payload) {
+    handler(data, function (statusCode, payload) {
       // we can't know the statusCode ahead of time so set a default
       statusCode = typeof (statusCode) === 'number' ? statusCode : 200
       payload = typeof (payload) === 'object' ? payload : {}
@@ -93,10 +92,6 @@ var serverLogic = function (req, res) {
       res.setHeader('content-type', 'application/json')
       res.writeHead(statusCode)
       res.end(stringifiedPayload)
-
-      // log out the trimmed path to verify expected output
-      // the statusCode and stringifiedPayload are getting passed in from the handler callback defined below
-      console.log('Returning this response: ', statusCode, stringifiedPayload)
     })
   })
 }
