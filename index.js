@@ -86,6 +86,8 @@ var serverLogic = function (req, res) {
       // we can't know the statusCode ahead of time so set a default
       statusCode = typeof (statusCode) === 'number' ? statusCode : 200
       payload = typeof (payload) === 'object' ? payload : {}
+
+      // convert payload to JSON so we can return to client
       var stringifiedPayload = JSON.stringify(payload)
 
       // return response to client
