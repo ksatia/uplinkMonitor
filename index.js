@@ -75,6 +75,7 @@ var serverLogic = function (req, res) {
       'query': queryString,
       'method': method,
       'header': header,
+      // convert our client request data from a buffer to a JS object
       'payload': helpers.parseJsonToObject(streamBuffer)
     }
 
@@ -87,7 +88,7 @@ var serverLogic = function (req, res) {
       statusCode = typeof (statusCode) === 'number' ? statusCode : 200
       payload = typeof (payload) === 'object' ? payload : {}
 
-      // convert payload to JSON so we can return to client
+      // we've been working with a JS object - convert back to a JSON string and send to client 
       var stringifiedPayload = JSON.stringify(payload)
 
       // return response to client
