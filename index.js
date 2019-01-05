@@ -79,10 +79,7 @@ var serverLogic = function (req, res) {
       'payload': helpers.parseJsonToObject(streamBuffer)
     }
 
-    // route the request to the specified handler
-    // value of the handler variable is a function that takes a data object and a callback
-    // we're actually invoking the handler here and passing in our data - we're receiving a statusCode and payload from
-    // the actual operation taking place (being passed through our callback) returns two callback params (status and payload)
+    // invoke handler and pass in data - the handler function will pass back a status code and payload 
     handler(data, function (statusCode, payload) {
       // we can't know the statusCode ahead of time so set a default
       statusCode = typeof (statusCode) === 'number' ? statusCode : 200
@@ -103,7 +100,8 @@ var serverLogic = function (req, res) {
 // since each path we're going to deal with is unique, we can use an object with unique keys
 const router = {
   'ping': handlers.ping,
-  'users': handlers.users
+  'users': handlers.users,
+  'tokens': handlers.tokens
 }
 
 
