@@ -7,9 +7,7 @@ The config.js file has been omitted because it contains an HMAC key - if cloning
 
 The structure should be as such:
 
-```/*
- * Create and export config variables
-*/
+// Create and export config variables
 
 // Creating a container for all possible environments
 var environments = {}
