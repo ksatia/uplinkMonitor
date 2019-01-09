@@ -6,10 +6,8 @@ This is just an API that will ultimately serve a front end for users to authenti
 The config.js file has been omitted because it contains an HMAC key - if cloning this, put a config.js file in the /lib directory.
 
 The structure should be as such:
-
-```/*
- * Create and export config variables
-*/
+```
+// Create and export config variables
 
 // Creating a container for all possible environments
 var environments = {}
