@@ -38,28 +38,22 @@ httpsServer.listen(config.httpsPort, function () {
 })
 
 var serverLogic = function (req, res) {
-  // parse URL using request object
-  var parsedURL = url.parse(req.url, true)
 
-  // get the pathName so that we can trim it
-  var urlPathName = parsedURL.pathname
+  const baseURL = 'http://' + req.headers.host + '/'
+  const parsedURL = new URL(req.url, baseURL)
 
-  // trim the value of the pathName object key
-  var trimmedPathName = urlPathName.replace(/^\/+|\/+$/g, '')
+  const parsedURLProps = {
+    'pathName': parsedURL.pathname.replace(/^\/+|\/+$/g, ''), 'query': parsedURL.searchParams,
+    'method': req.method, 'headers': req.headers
+  }
 
-  // get the query string
-  var queryString = parsedURL.query
+  const { pathName, query, method, headers } = parsedURLProps
 
-  // get the HTTP method in the request
-  var method = req.method.toUpperCase()
-
-  // parse the request header sent from client
-  var header = req.headers
-
-  // get payload from request object (if there is one)
+  // use Decoder to gather buffer data since it handles multibyte sequences before encoding
   var decoder = new StringDecoder('utf8')
   var streamBuffer = ''
   // bind to event listener for requests specifically (meaning this server is now responding to client requests)
+
   req.on('data', function (data) {
     streamBuffer += decoder.write(data)
   })
@@ -67,14 +61,14 @@ var serverLogic = function (req, res) {
     streamBuffer += decoder.end(data)
 
     // implement router logic
-    var handler = router.hasOwnProperty(trimmedPathName) ? router[trimmedPathName] : handlers.notFound
+    var handler = router.hasOwnProperty(pathName) ? router[pathName] : handlers.notFound
 
     // construct object to pass as 'data' parameter for callback
     var data = {
-      'trimmedPath': trimmedPathName,
-      'query': queryString,
+      'trimmedPath': pathName,
+      'query': query,
       'method': method,
-      'header': header,
+      'header': headers,
       // convert our client request data from a buffer to a JS object
       'payload': helpers.parseJsonToObject(streamBuffer)
     }
@@ -98,6 +92,7 @@ var serverLogic = function (req, res) {
 
 // build a simple router that will call an appropriate handler to serve user the correct content
 // since each path we're going to deal with is unique, we can use an object with unique keys
+
 const router = {
   'ping': handlers.ping,
   'users': handlers.users,
