@@ -1,7 +1,7 @@
 # uplinkMonitor
-a simple RESTful API with user auth to set alerts for site status checks
+This is a RESTful API for users to set alerts for site status checks.
 
-This is just an API that will ultimately serve a front end for users to authenticate themselves, create accounts and track the activity status of websites.
+This will ultimately serve a front end for users to authenticate themselves, create accounts and track the activity status of websites. It is written in pure node.js with no external dependencies - the tokenization is also hand-rolled. 
 
 The config.js file has been omitted because it contains an HMAC key - if cloning this, put a config.js file in the /lib directory.
 
